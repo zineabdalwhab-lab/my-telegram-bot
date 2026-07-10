@@ -1,17 +1,15 @@
-from telethon import TelegramClient, events
+import telebot
 import os
 
-# بياناتك التي استخرجناها من my.telegram.org
-API_ID = '30653012'
-API_HASH = '988bc3a735d603cc4388a776777a66d4'
-BOT_TOKEN = '8756704689:AAFEIEkwl1_4e9_uHecsyGsop4ZVunDzm0o'
+API_TOKEN = '8756704689:AAFEIEkwl1_4e9_uHecsyGsop4ZVunDzm0o'
+bot = telebot.TeleBot(API_TOKEN)
 
-# إنشاء العميل الخاص بالبوت
-client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    bot.reply_to(message, "أهلاً بك! البوت عاد للعمل.")
 
-@client.on(events.NewMessage(pattern='/start'))
-async def start(event):
-    await event.respond('أنا الآن أعمل بمكتبة Telethon وجاهز لمراقبة البث!')
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, "استلمت رسالتك!")
 
-print("البوت يعمل الآن...")
-client.run_until_disconnected()
+bot.infinity_polling()
